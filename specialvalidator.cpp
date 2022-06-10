@@ -11,38 +11,32 @@ QValidator::State SpecialValidator::validate(QString &input, int &pos) const
     if (input.isEmpty())
         return QValidator::Acceptable;
 
-    static QRegularExpression acceptableExpression("^\\d{4}$");
-    static QRegularExpression intermediateExpression("^\\d{0,4}$");
+    static QRegularExpression expression("^\\d{0,4}$");
+    auto expressionMatch = expression.match(input);
 
-    if (acceptableExpression.match(input).hasMatch())
-        return QValidator::Acceptable;
-
-    if (intermediateExpression.match(input).hasMatch())
-        return QValidator::Intermediate;
-
-    static QRegularExpression acceptableAdvancedExpression("^(\\d{4})-(\\d{4})$");
-    static QRegularExpression intermediateAdvancedteExpression("^(\\d{4})-(\\d{0,4})$");
-
-    auto acceptableMatch = acceptableAdvancedExpression.match(input);
-
-    if (acceptableMatch.hasMatch()) {
-        int lhs = acceptableMatch.captured(1).toInt();
-        int rhs = acceptableMatch.captured(2).toInt();
-
-        if (lhs < rhs)
+    if (expressionMatch.hasMatch()) {
+        if (expressionMatch.captured(0).size() == 4)
             return QValidator::Acceptable;
-        else
-            return QValidator::Invalid;
+
+        return QValidator::Intermediate;
     }
 
-    auto intermediateMatch = intermediateAdvancedteExpression.match(input);
+    static QRegularExpression advancedExpression("^(\\d{4})-(\\d{0,4})$");
+    auto advancedExpressionMatch = advancedExpression.match(input);
 
-    if (intermediateMatch.hasMatch()) {
-        QString lhs = intermediateMatch.captured(1);
-        QString rhs = intermediateMatch.captured(2);
+    if (advancedExpressionMatch.hasMatch()) {
+        QString lhs = advancedExpressionMatch.captured(1);
+        QString rhs = advancedExpressionMatch.captured(2);
 
         if (rhs.isEmpty())
             return QValidator::Intermediate;
+
+        if (rhs.size() == 4) {
+            if (lhs.toInt() < rhs.toInt())
+                return QValidator::Acceptable;
+            else
+                return QValidator::Invalid;
+        }
 
         lhs.truncate(rhs.size());
 
