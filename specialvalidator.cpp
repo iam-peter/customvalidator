@@ -15,10 +15,10 @@ QValidator::State SpecialValidator::validate(QString &input, int &pos) const
     QRegularExpressionMatch expressionMatch = expression.match(input);
 
     if (expressionMatch.hasMatch()) {
-        if (expressionMatch.captured(0).size() == 4)
-            return QValidator::Acceptable;
+        if (expressionMatch.captured(0).size() != 4)
+            return QValidator::Intermediate;
 
-        return QValidator::Intermediate;
+        return QValidator::Acceptable;
     }
 
     static QRegularExpression advancedExpression("^(\\d{4})-(\\d{0,4})$");
