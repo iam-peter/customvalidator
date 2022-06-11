@@ -12,7 +12,7 @@ where in the second case the right hand side (rhs) must be bigger than the left 
 Acceptable inputs:
 - 1234
 - 1234-5678
-- 9999-9998
+- 9998-9999
 
 Invalid inputs:
 - 123
