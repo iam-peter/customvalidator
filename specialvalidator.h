@@ -9,7 +9,7 @@ class SpecialValidator : public QValidator
 public:
     explicit SpecialValidator(QObject *parent = nullptr);
 
-    QValidator::State validate(QString &data, int &pos) const;
+    QValidator::State validate(QString &data, int &pos) const override;
 };
 
 #endif // SPECIALVALIDATOR_H
